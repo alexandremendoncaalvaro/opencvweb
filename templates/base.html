@@ -14,120 +14,19 @@
         <div class="row">
             <div class="col-lg-8  offset-lg-2">
                 <h3 class="mt-5">Live Streaming</h3>
+                <div id="videocontrols">
+                    <button onclick="document.location.reload(true);">Send</button>
+                </div>
                 <div id="video">
-                    <img id="screenshot" src="{{ url_for('video_feed') }}" width="640px" draggable="false">
-                    <svg width="640" height="352" viewBox="0 0 640 352" id="draw" xmlns="http://www.w3.org/2000/svg">
-                        <rect id="marquee" x="450" y="420" width="150" height="150" />
-                        <g id="boxes"></g>
+                    <img id="screenshot" src="{{ url_for('video_feed') }}" width="{{video_size.width}}px" draggable="false" alt="video stream">
+                    <svg id="draw" width={{video_size.width}} height={{video_size.height}} viewBox="0 0 {{video_size.width}} {{video_size.height}}" xmlns="http://www.w3.org/2000/svg">
+                        <rect id="marquee" x="0" y="0" width="10" height="10" />
                     </svg>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        const $ = document.querySelector.bind(document);
-        const rectangles = [];
-
-        // DOM elements
-        const $screenshot = $('#screenshot');
-        const $draw = $('#draw');
-        const $marquee = $('#marquee');
-        const $boxes = $('#boxes');
-
-        // Temp variables
-        let startX = 0;
-        let startY = 0;
-        const marqueeRect = {
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0,
-        };
-
-        $marquee.classList.add('hide');
-        $screenshot.addEventListener('pointerdown', startDrag);
-
-        function startDrag(ev) {
-            // middle button delete rect
-            if (ev.button === 1) {
-                const rect = hitTest(ev.layerX, ev.layerY);
-                if (rect) {
-                    rectangles.splice(rectangles.indexOf(rect), 1);
-                    // redraw();
-                }
-                return;
-            }
-            window.addEventListener('pointerup', stopDrag);
-            $screenshot.addEventListener('pointermove', moveDrag);
-            $marquee.classList.remove('hide');
-            startX = ev.layerX;
-            startY = ev.layerY;
-            drawRect($marquee, startX, startY, 0, 0);
-        }
-
-        function stopDrag(ev) {
-            $marquee.classList.add('hide');
-            window.removeEventListener('pointerup', stopDrag);
-            $screenshot.removeEventListener('pointermove', moveDrag);
-            if (ev.target === $screenshot && marqueeRect.width && marqueeRect.height) {
-                rectangles.push(Object.assign({}, marqueeRect));
-                // redraw();
-
-                fetch('http://127.0.0.1:5000/mark?x=' + marqueeRect.x + '&y=' + marqueeRect.y + '&h=' + marqueeRect.height + '&w=' + marqueeRect.width)
-                    .then((response) => {
-                        return response.json();
-                    })
-                    .then((response) => {
-                        document.location.reload(true);
-                    })
-            }
-        }
-
-        function moveDrag(ev) {
-            let x = ev.layerX;
-            let y = ev.layerY;
-            let width = startX - x;
-            let height = startY - y;
-            if (width < 0) {
-                width *= -1;
-                x -= width;
-            }
-            if (height < 0) {
-                height *= -1;
-                y -= height;
-            }
-            Object.assign(marqueeRect, {
-                x,
-                y,
-                width,
-                height
-            });
-            drawRect($marquee, marqueeRect);
-        }
-
-        function hitTest(x, y) {
-            return rectangles.find(rect => (
-                x >= rect.x &&
-                y >= rect.y &&
-                x <= rect.x + rect.width &&
-                y <= rect.y + rect.height
-            ));
-        }
-
-        function drawRect(rect, data) {
-            const {
-                x,
-                y,
-                width,
-                height
-            } = data;
-            rect.setAttributeNS(null, 'width', width);
-            rect.setAttributeNS(null, 'height', height);
-            rect.setAttributeNS(null, 'x', x);
-            rect.setAttributeNS(null, 'y', y);
-            return rect;
-        }
-    </script>
+    <script src="{{ url_for('static',filename='js/index.js') }}" type="module"></script>
 </body>
 
 </html>

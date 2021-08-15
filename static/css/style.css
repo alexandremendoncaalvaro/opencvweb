@@ -1,3 +1,7 @@
+.video {
+    position: relative;
+}
+
 #screenshot {
     position: absolute;
     z-index: 1;
@@ -9,17 +13,9 @@
     pointer-events: none;
 }
 
-#draw #boxes {
-    fill: blue;
-    stroke: white;
-    stroke-width: 1;
-    fill-opacity: 0.5;
-    stroke-opacity: 0.9;
-}
-
 #draw #marquee {
-    fill: white;
-    stroke: red;
+    fill: black;
+    stroke: yellow;
     stroke-width: 1;
     stroke-dasharray: 5, 5;
     stroke-opacity: 0.9;

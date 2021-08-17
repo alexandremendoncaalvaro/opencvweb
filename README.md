@@ -34,7 +34,7 @@ Run Flask
 python3 -m flask run
 ```
 
-# Run Container
+# Run from container
 ## Requirements
 [![Docker](https://img.shields.io/badge/docker-latest-blue)](https://www.python.org/ftp/python/3.7.9)  
 

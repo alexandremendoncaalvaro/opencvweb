@@ -44,5 +44,5 @@ docker build -t opencvweb .
 ```
 Run container  
 ```bash
-docker run -d --name opencvweb -p 5000:5000 opencvweb
+docker run -it --name opencvweb -p 5000:5000 opencvweb
 ```
